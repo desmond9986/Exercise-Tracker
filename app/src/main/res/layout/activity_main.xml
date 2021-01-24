@@ -4,15 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/dark_blue">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/introduction"
         android:textSize="20sp"
-        android:layout_margin="10dp"
-        android:layout_above="@+id/chronometer"/>
+        android:layout_margin="20dp"
+        android:layout_above="@+id/tv_spd"
+        android:textColor="@color/white"
+        />
+
+    <TextView
+        android:id="@id/tv_spd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0m/s"
+        android:textSize="30sp"
+        android:layout_above="@+id/chronometer"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+
+        />
 
     <Chronometer
         android:id="@id/chronometer"
@@ -21,6 +36,7 @@
         android:layout_above="@+id/btn"
         android:gravity="center"
         android:textSize="40sp"
+        android:textColor="@color/white"
     />
 
     <Button

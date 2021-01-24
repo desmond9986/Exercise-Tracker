@@ -128,4 +128,13 @@
             android:textAlignment="center"
             />
     </LinearLayout>
+
+    <com.example.ass3_3011712.SpeedGraph
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:id="@+id/speed_graph"
+        android:layout_gravity="center"
+        android:layout_margin="40dp"
+        />
+
 </LinearLayout>

@@ -23,9 +23,9 @@ public class GPXWriter {
     public void startWriting(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss'Z'");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        fileName = sdf.format(Calendar.getInstance().getTime()) + ".gpx";
+        fileName = sdf.format(Calendar.getInstance().getTime());
 
-        File file = new File(f, fileName);
+        File file = new File(f, fileName + ".gpx");
 
         try {
             FileWriter fw = new FileWriter(file,true);
