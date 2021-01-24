@@ -19,8 +19,8 @@ public class SpeedGraph extends View {
     private Boolean mIsInit = false;
     private Path mPath;
 
-    private float mOriginX;
-    private float mOriginY;
+    private float mOriginX; // x origin in graph
+    private float mOriginY; // y origin in graph
     private int mWidth;
     private int mHeight;
     private int padding;
@@ -48,6 +48,7 @@ public class SpeedGraph extends View {
     }
 
     public void init() {
+        // initial data
         mPaint = new Paint();
         mPath = new Path();
         mWidth = getWidth();
@@ -57,10 +58,9 @@ public class SpeedGraph extends View {
         mOriginY = mHeight - padding;
         mBlackPaint = new Paint();
         mIsInit = true;
-//        kmPerHour = new ArrayList<Float>();
-//        seconds = new ArrayList<Integer>();
     }
 
+    // a method to draw the ui
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -76,88 +76,94 @@ public class SpeedGraph extends View {
         mPaint.setStrokeWidth(10);
         mPaint.setColor(Color.BLUE);
 
-        setBackgroundColor(Color.WHITE);
-        drawAxis(canvas, mBlackPaint);
+        setBackgroundColor(Color.WHITE); // set background to white color
+        drawAxis(canvas, mBlackPaint); // draw the axis lines
+        if(kmPerHour != null)
+            drawGraphPlotLines(canvas, mPath, mPaint); // plot the graph
 
-        drawGraphPlotLines(canvas, mPath, mPaint);
-        drawTextOnXaxis(canvas);
-        drawTextOnYaxis(canvas);
+        drawTextOnXaxis(canvas); // draw x axis text
+        drawTextOnYaxis(canvas); // draw y axis text
 
     }
 
+    // draw y axis text
     private void drawTextOnYaxis(Canvas canvas){
         TextPaint textPaint = new TextPaint();
         textPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         textPaint.setColor(Color.BLACK);
         textPaint.setTextSize(40);
-        //Save the canvas origin onto the stack.
+        // save the canvas origin onto the stack.
         canvas.save();
 
-        //Draw rows.
-        for(int i=1; i<=11; i++){
-            //Save the current origin.
+        // draw rows.
+        for(int i = 1; i <= 11; i++){
+            // save the current origin.
             canvas.save();
 
-            //Move to origin of this column.
+            // move to origin of this row
             canvas.translate( padding/4, mHeight - padding - (i * padding ));
             if(i==11)
                 canvas.drawText("km/s", 0, 30, textPaint);
             else
                 canvas.drawText("" + i, 0, 30, textPaint);
 
-            //Restore to the starting origin.
+            // restore to the starting origin.
             canvas.restore();
 
-        }//for j inner loop.
+        }
 
     }
 
+    // draw x axis text
     private void drawTextOnXaxis(Canvas canvas){
         TextPaint textPaint = new TextPaint();
         textPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         textPaint.setColor(Color.BLACK);
         textPaint.setTextSize(40);
-        //Save the canvas origin onto the stack.
+        // save the canvas origin onto the stack.
         canvas.save();
+        // to make the text in center
         float textHeight = textPaint.descent() - textPaint.ascent();
         float textOffset = (textHeight / 2) - textPaint.descent();
         RectF textBounds = new RectF(0, 0, mWidth-padding*3, padding);
 
-        //Move to origin of this column.
         canvas.translate( 0, mHeight - padding);
 
         canvas.drawText("Time(s)", textBounds.centerX(), textBounds.centerY() + textOffset, textPaint);
 
-        //Restore to the starting origin.
+        // restore to the starting origin.
         canvas.restore();
     }
 
+    // a method to draw x and y axis
     private void drawAxis(Canvas canvas, Paint paint) {
-
-
-        canvas.drawLine(padding, padding, padding, mHeight - 10, paint);//y-axis
+        canvas.drawLine(padding, padding, padding, mHeight - 10, paint); // y axis
         canvas.drawLine(10, mHeight - padding,
-                mWidth - padding, mHeight - padding, paint);//x-axis
+                mWidth - padding, mHeight - padding, paint); //x axis
     }
 
+    // a method to plot on the graph
     private void drawGraphPlotLines(Canvas canvas, Path path, Paint paint) {
+        canvas.save();
         float xPoint;
-        paint.setStyle(Paint.Style.STROKE);
+        // set the style of paint
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStrokeWidth(3);
 
-        mPath.moveTo(mOriginX, mOriginY);//shift origin to graph's origin
+        mPath.moveTo(mOriginX, mOriginY); // shift origin to graph's origin
 
         for (int i = 0; i < kmPerHour.size(); i++) {
+            // x point is depend on the time and y is speed
             xPoint = (float)(mWidth-padding*2)/seconds.get(seconds.size()-1) * seconds.get(i);
             mPath.lineTo(mOriginX + xPoint, mOriginY - (((mOriginY-padding)/10)* kmPerHour.get(i)));
 
-        }//end for
+        }
         canvas.drawPath(mPath, paint);
+        canvas.restore();
     }
 
-
+    // call this method to set data of points
     public void setData(ArrayList<Float> kmPerHour, ArrayList<Integer> seconds) {
         this.kmPerHour = kmPerHour;
         this.seconds = seconds;

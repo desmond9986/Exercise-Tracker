@@ -17,17 +17,19 @@ public class GPXWriter {
 
     public GPXWriter(File f){
         this.f = f;
-        f.mkdirs();
+        f.mkdirs(); // create the directory is not present
     }
 
+    // a method to create a gpx file
     public void startWriting(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss'Z'");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        fileName = sdf.format(Calendar.getInstance().getTime());
+        fileName = sdf.format(Calendar.getInstance().getTime()); // use the current date time for the file name
 
         File file = new File(f, fileName + ".gpx");
 
         try {
+            // write the format of gpx into the file
             FileWriter fw = new FileWriter(file,true);
             bw = new BufferedWriter(fw);
             bw.write("<gpx version=\"1.1\" creator=\"Ass3_3011712\">");
@@ -43,6 +45,7 @@ public class GPXWriter {
         }
     }
 
+    // a method to write location into file
     public void addLocation(double latitude, double longitude, double altitude, long time, float speed){
         DecimalFormat df1 = new DecimalFormat("#.######");
         DecimalFormat df2 = new DecimalFormat("#.##");
@@ -51,6 +54,7 @@ public class GPXWriter {
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         try{
+            // write the details of location into the file with gpx format
             bw.newLine();
             bw.write("\t\t\t<trkpt lat=\"" + df1.format(latitude) + "\" lon=\"" + df1.format(longitude) + "\">");
             bw.newLine();
@@ -65,6 +69,7 @@ public class GPXWriter {
         }
     }
 
+    // a method to do write the last part of gpx and close the buffered writer
     public void stopWriting(){
         try {
             bw.newLine();
@@ -81,6 +86,7 @@ public class GPXWriter {
         }
     }
 
+    // a method to return the file name
     public String getFileName(){
         return fileName;
     }

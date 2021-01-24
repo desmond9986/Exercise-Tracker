@@ -19,15 +19,20 @@ public class GPXReader {
 
     public GPXReader(FileReader fr){
         br = new BufferedReader(fr);
+
+        // initial the variables
         longitudes = new ArrayList<Double>();
         latitudes = new ArrayList<Double>();
         times = new ArrayList<String>();
         speeds = new ArrayList<Float>();
         altitudes = new ArrayList<Float>();
-        convertElements();
+
+        convertElements(); // save all the location details into variables
     }
 
+    // save all the location details in the file to variables
     private void convertElements(){
+        // create regular expression pattern to match the gpx format
         Pattern patternTrkpt = Pattern.compile("<trkpt lat=\"(\\d+\\.\\d{6})\" lon=\"(\\d+\\.\\d{6})\">");
         Pattern patternEle = Pattern.compile("<ele>(\\d+\\.\\d{2})</ele>");
         Pattern patternTime = Pattern.compile("<time>(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z)</time>");
@@ -37,6 +42,7 @@ public class GPXReader {
             String line;
             while ((line = br.readLine()) !=null){
                 Matcher m;
+                // use the patterns declared above to find the location details
                 if((m = patternTrkpt.matcher(line)).find())
                 {
                     latitudes.add(Double.parseDouble(m.group(1)));
@@ -59,6 +65,7 @@ public class GPXReader {
         }//catch
     }
 
+    // compute the average speed and return it
     public double getAverageSpeed(){
         double avgSpd = 0.0;
 
@@ -70,11 +77,13 @@ public class GPXReader {
         return avgSpd;
     }
 
+    // compute total distance and return it
     public float getTotalDistance(){
         float totalDistance = 0;
         float[] distance = new float[1];
 
         for(int i = 0; i < longitudes.size() - 1; i++){
+            // use th Location.distanceBetween() to find the distance
             Location.distanceBetween(latitudes.get(i), longitudes.get(i), latitudes.get(i+1), longitudes.get(i+1), distance);
             totalDistance += distance[0];
         }
@@ -82,6 +91,7 @@ public class GPXReader {
         return totalDistance;
     }
 
+    // compute a maximum altitude and return in
     public float getMaxAltitude(){
         float maxAltitude = 0;
 
@@ -96,7 +106,7 @@ public class GPXReader {
     }
 
 
-
+    // compute the minimum altitude and return it
     public float getMinAltitude(){
         float minAltitude = 0;
 
